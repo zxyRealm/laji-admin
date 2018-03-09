@@ -210,6 +210,13 @@
             page:this.$route.params.page,
             isAuthor:0
           };
+          if(this.$route.name==='userInfo'){
+            searchValue = {
+              page:1
+            };
+            this.keywords = this.$route.params.uid;
+            this.selectType = 'userId'
+          }
           let val = this.$http.trim(this.keywords);
           if(this.selectType && val){
             if((this.selectType==='userId' && this.selectType==='') && Number(val)){
@@ -231,7 +238,6 @@
           })
         },
         searchUser(){
-            console.log(this.$route.params.page);
           if(this.$route.params.page!=1){
             this.$router.push({params:{page:1}})
           }else {

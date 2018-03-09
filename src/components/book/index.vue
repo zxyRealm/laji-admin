@@ -14,7 +14,6 @@
           </p>
         </div>
       </el-alert>
-  
       <el-row v-show="fold" class="mbt20 fitler-search">
         <div>
           排序类型：
@@ -44,11 +43,9 @@
           </el-radio-group>
         </div>
       </el-row>
-      
       <el-row class="mbt20">
-        <el-button type="danger" v-if="$store.state.userInfo && $store.state.userInfo.adminRolemenuanduserrole.deletes" plain @click="toggleSelection()">批量删除</el-button>
+        <el-button type="danger" v-if="authority.deletes" plain @click="toggleSelection()">批量删除</el-button>
       </el-row>
-  
       <el-row class="mbt20">
         <el-col :xs="20" :sm="16" :md="12" :lg="9" :xl="6">
           <el-input placeholder="请输入内容" v-model="keywords" class="input-with-select" @keyup.enter.native="searchBook">
@@ -161,6 +158,7 @@
           </el-table-column>
           
           <el-table-column
+            width="140"
             label="创建时间">
             <template slot-scope="scope">
               <span >{{ scope.row.bookCreatedTime | time('long') }}</span>
@@ -168,6 +166,7 @@
           </el-table-column>
           
           <el-table-column
+            width="140"
             label="更新时间">
             <template slot-scope="scope">
               <span>{{ scope.row.lastUpdateTime | time('long') }}</span>
@@ -176,6 +175,7 @@
           
           <el-table-column
             prop="bookWorldCount"
+            width="100"
             label="字数"
             align="center">
           </el-table-column>
@@ -270,6 +270,14 @@
             page:this.$routeParams.page,
             orderParemeter:'bookId'
           };
+          if(this.$route.name==='bookInfo'){
+            searchValue = {
+              page:1,
+              orderParemeter:'bookId'
+            };
+            this.selectType = "bookId";
+            this.keywords = this.$route.params.bid;
+          }
           let val = this.$http.trim(this.keywords);
           if(this.selectType && val){
             if((this.selectType==='bookId' || this.selectType==='bookWriterId') && !Number(val)){
@@ -284,7 +292,7 @@
                   searchValue[k] = this.filterList[k];
               }
           }
-          if(this.$route.name==='bookList'){
+          if(this.$route.name==='bookList' || this.$route.name==='bookInfo'){
             this.$ajax("/admin/getBooInfoList",searchValue,res=>{
               if(res.returnCode===200){
                 this.bookList = res.data

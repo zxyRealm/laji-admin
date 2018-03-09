@@ -47,8 +47,8 @@
 
 <script type="text/ecmascript-6">
   import $ from 'jquery';
-  require('@/assets/js/jquery.Jcrop');
-  require('@/assets/css/jquery.Jcrop.min.css');
+  require('@/assets/js/jquery.jcrop.js');
+  require('@/assets/css/jquery.jcrop.min.css');
   export default{
     props:{
       action:{

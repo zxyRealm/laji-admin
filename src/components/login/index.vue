@@ -34,14 +34,12 @@
           }
         };
         var validatePass = (rule, value, callback) => {
-          
           if (!this.$http.trim(value).length) {
             callback(new Error('请输入密码'));
           } else {
             callback();
           }
         };
-        
         return{
           visible:true,
           ruleForm2: {
@@ -90,7 +88,7 @@
       }
     }
 </script>
-<style lang="stylus" rel="stylesheet/stylus">
+<style lang="stylus" rel="stylesheet/stylus" type="text/stylus">
 .login-wrap
   .el-dialog
     &.login-dialog

@@ -16,7 +16,7 @@
     <el-row v-show="fold" class="mbt20 fitler-search">
       <div>
         支付类型：
-        <el-radio-group v-model="rechargeType">
+        <el-radio-group v-model="filterForm.rechargeType">
           <el-radio-button label="">全部</el-radio-button>
           <el-radio-button label="110">支付宝</el-radio-button>
           <el-radio-button label="111">微信</el-radio-button>
@@ -25,11 +25,19 @@
       </div>
       <div>
         终&emsp;&emsp;端：
-        <el-radio-group v-model="client">
+        <el-radio-group v-model="filterForm.client">
           <el-radio-button label="">全部</el-radio-button>
           <el-radio-button label="PC">PC</el-radio-button>
           <el-radio-button label="安卓">Android</el-radio-button>
           <el-radio-button label="苹果支付">IOS</el-radio-button>
+        </el-radio-group>
+      </div>
+      <div>
+        状&emsp;&emsp;态：
+        <el-radio-group v-model="filterForm.isOK">
+          <el-radio-button label="">全部</el-radio-button>
+          <el-radio-button label="1">成功</el-radio-button>
+          <el-radio-button label="0">失败</el-radio-button>
         </el-radio-group>
       </div>
     </el-row>
@@ -152,8 +160,11 @@
     data(){
       return{
         fold:false,
-        rechargeType:'',
-        client:'',
+        filterForm:{
+          rechargeType:'',
+          client:'',
+          isOK:''
+        },
         searchForm:{
         },
         defaultValue:null,
@@ -193,11 +204,10 @@
           }
           this.searchForm[this.selectType] = this.keywords
         }
-        if(this.rechargeType){
-          this.searchForm.rechargeType = this.rechargeType
-        }
-        if(this.client){
-          this.searchForm.client = this.client
+        for(let i in this.filterForm){
+          if(this.filterForm[i]!==''){
+            this.searchForm[i] = this.filterForm[i]
+          }
         }
         if(this.date){
           this.searchForm.startdate	 = this.date[0] + ' 00:00:00';
@@ -247,11 +257,11 @@
           this.getChargeStatisticList()
         }
       },
-      'client':function () {
-        this.getChargeStatisticList()
-      },
-      rechargeType:function () {
-        this.getChargeStatisticList()
+      filterForm:{
+        handler() {
+          this.getChargeStatisticList()
+        },
+        deep: true
       }
     },
     filters:{

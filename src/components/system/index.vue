@@ -121,10 +121,12 @@
               case 'NewAuthorRecordCount':
                 msg = '新增作者';
                 break;
+              case 'updateBookCount':
+                  msg = '更新书籍数量';
+                  break;
               default:
                 msg = '未知'
             }
-           
             return msg
           }
       }

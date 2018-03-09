@@ -3,11 +3,16 @@
       <el-alert
         title="操作说明"
         type="info"
-        description="限时免费按照批次更新，每批固定8本书籍，每批次的限免时长为上一批次截止时间到本批次截止时间；设置当前批次截止时间时必须大于上一批次的截止时间"
         show-icon>
+        <div>
+          <p>
+            限时免费按照批次更新，每批固定8本书籍，每批次的限免时长为上一批次截止时间到本批次截止时间；设置当前批次截止时间时必须大于上一批次的截止时间
+          </p>
+        </div>
       </el-alert>
       <el-row class="mbt20">
         <el-button type="primary" plain @click="addDeadLine">添加</el-button>
+        <el-button type="danger" plain @click="delDeadLine()">删除本批</el-button>
         <el-button class="fr" @click="$clearCache()">清除缓存</el-button>
       </el-row>
       <el-table
@@ -73,7 +78,8 @@
           align="center">
           <template slot-scope="scope">
             <el-row >
-              <el-button size="mini" >编辑</el-button>
+              <a href="javascript:0;">编辑</a>
+              <a href="javascript:0;" class="red" @click="delDeadLine(scope.row.id)">删除</a>
             </el-row>
           </template>
         </el-table-column>
@@ -82,11 +88,11 @@
       <el-pagination
         background
         @current-change="pageChange"
+        :current-page.sync="deadLineList.pageNum"
         :page-size="deadLineList.pageSize"
         layout="prev, pager, next"
         :total="deadLineList.total">
       </el-pagination>
-      
       
       <el-dialog
         title="修改限时免费"
@@ -111,7 +117,6 @@
               :multiple-limit="8"
               filterable
               remote
-              reserve-keyword
               placeholder="请输入关键词"
               :filter-method="search"
               :remote-method="remoteMethod"
@@ -148,14 +153,38 @@
           }
       },
       methods:{
-        getDeadLine(){
-          this.$ajax("/admin/sys-getFreetimelimit",{page:this.$route.params.page},res=>{
+        getDeadLine(page){
+          this.$ajax("/admin/sys-getFreetimelimit",{page:page?page:this.$route.params.page},res=>{
             if(res.returnCode===200){
+              res.data.list = res.data.list.reverse();
               this.deadLineList = res.data
             }
           })
         },
         editDeadLine(){
+          let num = 0,subData;
+          let add = (arr)=>{
+            this.$ajax("/admin/sys-addfreetimelimit",{
+              bookId:arr[0],
+              bookName:arr[1],
+              batchNumber:this.deadLineList.list?(this.deadLineList.list[0].batchNumber+1):1,
+              refreshtime:this.formValue.time
+            },res=>{
+              if(res.returnCode===200){
+                if(num===7){
+                  this.dialogFormVisible = false;
+                  this.$loading().close();
+                  this.getDeadLine();
+                  this.$message({message:"添加成功",type:'success'});
+                  return false
+                }
+                num++;
+                if(num<=7){
+                  add(subData[num].split(','));
+                }
+              }
+            })
+          };
           if(this.formValue.time){
             if(this.formValue.list.length!==8){
               this.$message({message:'请添加满8本书籍后提交',type:'warning'})
@@ -166,26 +195,41 @@
                 spinner: 'el-icon-loading',
                 background: 'rgba(0, 0, 0, 0.7)'
               });
-              this.formValue.list.forEach((item,index)=>{
-                let arr = item.split(",");
-                this.$ajax("/admin/sys-addfreetimelimit",{
-                  bookId:arr[0],
-                  bookName:arr[1],
-                  batchNumber:this.deadLineList.list?(this.deadLineList.list[0].batchNumber+1):1,
-                  refreshtime:this.formValue.time
-                },res=>{
-                  if(res.returnCode===200 && index===7){
-                    this.$loading().close();
-                    this.$message({message:"添加成功",type:'success'})
-                  }
-                })
-              })
+              subData = JSON.parse(JSON.stringify(this.formValue.list));
+              add(subData[0].split(','));
             }
           }else {
               this.$message({message:'请先选取时间',type:'warning'})
           }
           
-       
+        },
+        delDeadLine(id){
+              if(!id){
+                  let list = [];
+                  for(let k=0,len = this.deadLineList.list.length;k<len;k++){
+                      if(this.deadLineList.list[0].batchNumber !== this.deadLineList.list[k].batchNumber){
+                        this.$message({message:'不同批次，不可一次删除',type:'warning'});
+                        return false
+                      }
+                      list.push(this.deadLineList.list[k].id)
+                  }
+                  id = list.toString()
+              }
+              this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消',
+                  type: 'warning'
+              }).then(() => {
+                  this.$ajax("/admin/sys-deltefreetimelimit",{
+                      freeTimeLimitid:id
+                  },(res)=>{
+                    if(res.returnCode===200){
+                        this.$message({message:'删除成功',type:'success'});
+                        this.getDeadLine(1)
+                    }
+                  })
+              });
+          
         },
         remoteMethod(query) {
           if (query !== '') {
@@ -207,6 +251,9 @@
           }
         },
         addDeadLine(){
+          if(this.$route.params.page!==1){
+            this.$router.push({params:{page:1}})
+          }
           this.dialogFormVisible = true
         },
         search(){

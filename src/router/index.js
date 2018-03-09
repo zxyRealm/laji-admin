@@ -44,6 +44,12 @@ const router = new Router({
           meta:{keepAlive:true},
           components:require('../components/book/index.vue')
         }
+        ,{
+          path:'book/info/:bid',
+          name:'bookInfo',
+          meta:{keepAlive:true},
+          components:require('../components/book/index.vue')
+        }
         // 书籍详情
         ,{
           path:'book_detail/:bid',
@@ -118,6 +124,11 @@ const router = new Router({
           components:require("../components/user/index.vue")
         },
         ,{
+          path:'user/info/:uid',
+          name:'userInfo',
+          components:require("../components/user/index.vue")
+        }
+        ,{
           path:'author/list',
           redirect:'author/list/1'
         }
@@ -158,7 +169,6 @@ const router = new Router({
           name:'bookProperty',
           components:require("../components/book/book_property.vue")
         }
-
 
 ///////////////////////////////////////////////////////////////////
         // 评论管理
@@ -656,6 +666,9 @@ router.beforeEach((to,form,next)=>{
   // console.log()
 });
 router.afterEach(()=>{
+  // console.log(this.app.$nextTick(()=>{
+  //   // console.log(document.getElementById('laji-admin-body'))
+  // }))
   window.scrollTo(0,0)
 })
 export default router

@@ -43,6 +43,8 @@
       </el-table-column>
       <el-table-column
         prop="id"
+        width="80"
+        align="center"
         label="ID"
         >
       </el-table-column>
@@ -52,15 +54,17 @@
         label="书名">
       </el-table-column>
       
-      
       <el-table-column
         prop="bookid"
+        width="80"
+        align="center"
         label="书籍ID">
       </el-table-column>
       
       <el-table-column
         prop="commentId"
-       
+        width="80"
+        align="center"
         label="父评论ID">
       </el-table-column>
       

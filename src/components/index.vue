@@ -54,7 +54,7 @@
       </div>
     </div>
     
-    <div class="layui-body">
+    <div class="layui-body" id="laji-admin-body">
       <!-- 内容主体区域 -->
         <!--<transition>-->
           <keep-alive>
@@ -146,6 +146,11 @@
             }
             return href;
         }
+      },
+      watch:{
+          $route:function () {
+            document.getElementById('laji-admin-body').scrollTop =0;
+          }
       }
     }
 </script>

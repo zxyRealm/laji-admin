@@ -41,6 +41,7 @@
           </el-table-column>
           <el-table-column
             prop="id"
+            width="100"
             label="章节ID">
           </el-table-column>
           <el-table-column
@@ -58,6 +59,7 @@
           <el-table-column
             prop="chapterIsvip"
             label="VIP状态"
+            width="80"
             align="center">
             <template slot-scope="scope">
               <span class="red" v-if="scope.row.chapterIsvip">VIP</span>
@@ -67,6 +69,7 @@
           
           <el-table-column
             prop="chapterState"
+            width="80"
             label="审核状态"
             align="center">
             <template slot-scope="scope">
@@ -76,6 +79,7 @@
           </el-table-column>
           
           <el-table-column
+            width="140"
             label="发布时间">
             <template slot-scope="scope">
               {{scope.row.releaseTime | time('long')}}
@@ -84,17 +88,18 @@
           
           <el-table-column
             prop="chapterLength"
+            width="100"
             align="center"
             label="字数">
           </el-table-column>
           
           <el-table-column
+            width="80"
+            align="center"
             label="操作">
             <template slot-scope="scope">
               <el-dropdown trigger="click" placement="bottom" @command="handleClick($event,scope.row)">
-                <el-button size="small" type="primary">
-                  更多菜单<i class="el-icon-arrow-down el-icon--right"></i>
-                </el-button>
+                <a href="javascript:0;">更多菜单</a>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item command="a">编辑</el-dropdown-item>
                   <el-dropdown-item command="b">审核</el-dropdown-item>

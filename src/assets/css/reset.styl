@@ -74,6 +74,13 @@ a cite
 .box
 .box *
   box-sizing content-box
+.clearfix:after{
+  content: "";
+  display: block;
+  clear: both;
+}
+/*为了兼容IE6*/
+.clearfix{zoom:1}
 
 .clear
   clear both

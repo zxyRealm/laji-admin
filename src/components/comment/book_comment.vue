@@ -44,6 +44,8 @@
       </el-table-column>
       <el-table-column
         prop="id"
+        width="80"
+        align="center"
         label="ID">
       </el-table-column>
       
@@ -55,11 +57,15 @@
       
       <el-table-column
         prop="bookId"
+        width="80"
+        align="center"
         label="书籍ID">
       </el-table-column>
       
       <el-table-column
         prop="userId"
+        width="80"
+        align="center"
         label="用户ID">
       </el-table-column>
       
