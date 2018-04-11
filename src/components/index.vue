@@ -7,7 +7,7 @@
       <ul class="layui-nav layui-layout-right">
         <li class="layui-nav-item">
           <a href="javascript:;">
-            <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+            <img src="/static/img/avatar.jpg" class="layui-nav-img">
             {{$store.state.userInfo.userName}}
           </a>
           <dl class="layui-nav-child">

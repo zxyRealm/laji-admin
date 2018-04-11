@@ -629,7 +629,9 @@ router.beforeEach((to,form,next)=>{
   if(Number(router.app.$cookie('login_key'))){
       http.ajax({
         type:'post',
-        url:'/api/admin-isLogin',
+        url:'https://www.lajixs.com/api/admin-isLogin',
+        xhrFields: {withCredentials: true},
+        crossDomain: true,
         data:{},
         success:(res)=>{
           if(res.returnCode===200){

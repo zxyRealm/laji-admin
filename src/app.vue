@@ -5,7 +5,6 @@
 </template>
 
 <script>
-//import '../static/layui/css/layui.css'
 import './assets/css/global.css'
 import './assets/css/reset.styl'
 export default {

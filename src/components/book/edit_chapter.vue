@@ -349,20 +349,7 @@
       getVolume(){
         this.$ajax("/books-getvolume",{bookId:this.ruleForm.bookId},json => {
           if(json.returnCode===200){
-            if(json.data < 1){
-              this.$ajax("/book-showBookInfo",{
-                bookid:this.$route.params.bid
-              },json => {
-                if(json.returnCode===200){
-                  this.ruleForm.bookTitle = json.data.bookName;
-                  this.ruleForm.bookId = json.data.bookId;
-                }
-              })
-            }else {
-              this.volumeList = json.data;
-              this.ruleForm.bookTitle = json.data[0].bookName;
-              this.ruleForm.bookId = json.data[0].bookid;
-            }
+            this.volumeList = json.data;
             this.update = true
           }
         });

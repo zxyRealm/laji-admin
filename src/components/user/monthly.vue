@@ -19,7 +19,7 @@
         </p>
       </div>
     </el-alert>
-    <el-row class="mbt20">
+    <el-row v-if="isAuthor" class="mbt20">
       发布时间：
       <el-date-picker
         placeholder="选择月"
@@ -31,8 +31,8 @@
       >
       </el-date-picker>
       <el-button @click="setPublishTime">更新</el-button>
-      <el-button class="fr" size="medium" @click="oneKeyMonthly">一键月报</el-button>
-      <el-button class="fr" size="medium" @click="delMoak">删除测试</el-button>
+      <el-button v-if="isAuthor" class="fr" size="medium" @click="oneKeyMonthly">一键月报</el-button>
+      <el-button v-if="isAuthor" class="fr" size="medium" @click="delMoak">删除测试</el-button>
     </el-row>
     <el-row class="mbt20">
       <el-date-picker
@@ -43,7 +43,7 @@
         value-format="yyyy-MM"
         placeholder="选择月">
       </el-date-picker>
-      <el-col :xs="20" :sm="16" :md="12" :lg="9" :xl="6">
+      <el-col v-if="isAuthor" :xs="20" :sm="16" :md="12" :lg="9" :xl="6">
         <el-input placeholder="请输入内容" v-model="keywords" class="input-with-select" @keyup.enter.native="searchReplyCom">
           <el-select v-if="$route.name=='authorMonReport'" v-model="selectType" slot="prepend" placeholder="请选择">
             <el-option label="书  名" value="bookName"></el-option>
@@ -59,6 +59,7 @@
         </el-input>
       </el-col>
       <el-upload
+        v-if="isAuthor"
         style="display: inline-block"
         class="upload-demo fr"
         :show-file-list="false"
@@ -122,9 +123,9 @@
         label="小米椒"
       >
       </el-table-column>
-  
       
       <el-table-column
+        v-if="isAuthor"
         prop="replyCommentsContent"
         label="时间">
         <template slot-scope="scope">
@@ -133,6 +134,7 @@
       </el-table-column>
   
       <el-table-column
+        v-if="isAuthor"
         align="center"
         label="操作">
         <template slot-scope="scope">
@@ -151,7 +153,6 @@
       layout="total, prev, pager, next, jumper"
       :total="reportCommentList.total">
     </el-pagination>
-    
   </div>
 </template>
 
@@ -179,6 +180,7 @@
     },
     methods:{
       getReportStatisticList(){
+        let url = '/admin/getAuthorMonthlyreportAdminList'
         this.searchForm = {};
         this.searchForm.page = this.$route.params.page;
         if(this.$route.params.aid){
@@ -195,9 +197,16 @@
           this.searchForm.year = this.date.split("-")[0];
           this.searchForm.month = this.date.split("-")[1];
         }
-        this.$ajax("/admin/getAuthorMonthlyreportAdminList",this.searchForm,res=>{
+        if(this.$route.name==='authorMonReport'){
+            url = '/admin/getAuthorMonthlyreportByAuthormon'
+        }
+        this.$ajax(url,this.searchForm,res=>{
           if(res.returnCode===200){
-            this.reportCommentList = res.data
+            if(this.$route.name==='authorMonReport'){
+                this.$set(this.reportCommentList,'list',[res.data])
+            } else {
+                this.reportCommentList = res.data
+            }
           }else if(!res.data){
             this.reportCommentList = {}
           }
@@ -290,8 +299,6 @@
     },
     created(){
       this.getPublishTime();
-//      this.date = this.$formTime(new Date(new Date().setMonth(new Date().getMonth()-1)),'mon');
-     
       this.getUserInfo()
     },
     watch:{
@@ -302,6 +309,11 @@
         if(old!==''){
           this.getReportStatisticList()
         }
+      }
+    },
+    computed:{
+      isAuthor:function () {
+        return this.$route.name!=='authorMonReport'
       }
     }
   }

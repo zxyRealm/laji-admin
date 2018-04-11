@@ -37,9 +37,11 @@ exports.install = function (Vue, options) {
       }
       this.$http.ajax({
         type:!type?'post':type,
-        url:'/api'+url,
+        url:'https://www.lajixs.com/api'+url,
         data:data,
         dataType:!dataType?'json':dataType,
+        xhrFields: {withCredentials: true},
+        crossDomain: true,
         success:(res)=>{
           if(load){
             this.$loading().close();

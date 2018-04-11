@@ -10,16 +10,16 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api': {
-        target: 'http://192.168.0.109:8081',//接口域名
-        changeOrigin: true,//是否跨域
-        pathRewrite: {
-          '^/api': ''    //需要rewrite重写
-        }
-      }
+      // '/api': {
+      //   target: 'http://192.168.0.109:8081',//接口域名
+      //   changeOrigin: true,//是否跨域
+      //   pathRewrite: {
+      //     '^/api': ''    //需要rewrite重写
+      //   }
+      // }
     },
     // Various Dev Server settings
-    host:'192.168.0.112', // can be overwritten by process.env.HOST
+    host:'192.168.0.165', // can be overwritten by process.env.HOST
     port: 8281, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,
     errorOverlay: true,
@@ -56,12 +56,12 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../dist/ljxsadmin.html'),
+    index: path.resolve(__dirname, '../dominate/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../dist'),
+    assetsRoot: path.resolve(__dirname, '../dominate'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/ljxsbackad/',
+    assetsPublicPath: '/dominate/',
     /**
      * Source Maps
      */

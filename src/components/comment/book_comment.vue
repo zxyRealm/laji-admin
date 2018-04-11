@@ -176,7 +176,7 @@
                 code = 2;
                 tip = '此操作将永久删除书籍<span class="red">'+item.bookName+'</span>的全部评论, 是否继续?';
               }else if(dType==='user'){
-                code = 4;
+                code = 3;
                 tip = '此操作将永久删除用户<span class="red">'+item.userName+'</span>的全部评论, 是否继续?';
               }else {
                 tip = '此操作将永久删除'+idList.length+'条评论, 是否继续?';
@@ -202,8 +202,6 @@
                       }
                   })
               })
-              
-            
           };
         
           if(item){

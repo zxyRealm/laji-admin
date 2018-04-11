@@ -34,7 +34,7 @@
 <script type="text/ecmascript-6">
   export default{
     data(){
-      var validateContent = (rule, value, callback) => {
+      let validateContent = (rule, value, callback) => {
         if (this.$http.trim(value).length<1) {
           callback(new Error('请添加详情内容！'));
         } else {

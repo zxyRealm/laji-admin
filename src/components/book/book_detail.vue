@@ -25,7 +25,7 @@
         <el-tab-pane name="base" label="基本信息">
           <el-form ref="detailForm1" :rules="rules1" :model="bookDetail" label-width="80px">
             <el-form-item label="书籍名称" prop="bookName">
-              <el-input v-model="bookDetail.bookName" class="mw320"></el-input>
+              <el-input readonly v-model="bookDetail.bookName" class="mw320"></el-input>
             </el-form-item>
             <el-form-item label="作品分类" prop="bookClassificationId">
               <el-select v-model="bookDetail.bookClassificationId" placeholder="请选择活动区域">
@@ -105,9 +105,9 @@
             <el-form-item label="发布状态" prop="bookAuthorization">
               <el-radio-group v-model="bookDetail.bookAuthorization">
                 <el-radio :label="0">网站首发</el-radio>
-                <el-radio :label="1">授权发布</el-radio>
+                <el-radio :label="3">授权发布</el-radio>
                 <el-radio :label="2">首发签约</el-radio>
-                <el-radio :label="3">授权签约</el-radio>
+                <el-radio :label="1">授权签约</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="作品简介" prop="bookIntroduction">

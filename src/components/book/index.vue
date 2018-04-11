@@ -10,7 +10,7 @@
             <router-link v-if="authority.adds" class="red" :to="{name:'addNewBook'}">新建书籍</router-link>来添加新书
           </p>
           <p>
-            <span class="red">提示：</span>需要更多详细筛选条件请直接点击 <a href="javascript:0;" @click="fold?fold=false:fold=true">展开</a>
+            <span class="red">提示：</span>需要更多详细筛选条件请直接点击 <a href="javascript:0;" @click="fold?fold=false:fold=true">展开</a>；双击书名可进行修改
           </p>
         </div>
       </el-alert>
@@ -68,6 +68,7 @@
           border
           @row-click="handleRowClick"
           @selection-change="handleSelectionChange"
+          @cell-dblclick="dblClick"
           style="width: 100%">
           <el-table-column
             type="selection"
@@ -84,6 +85,14 @@
           <el-table-column
             prop="bookName"
             label="书名">
+            <template slot-scope="scope">
+              <textarea
+                :class="!scope.row.edit?'edit':''"
+                :disabled="!scope.row.edit"
+                v-model="scope.row.bookName"
+                @blur="updateBookTitle(scope.row)">
+              </textarea>
+            </template>
           </el-table-column>
   
           <el-table-column
@@ -246,23 +255,25 @@
         'pic-cropper':Cropper
       },
       data(){
-            return{
-              dialogTableVisible:false,
-              bookList:{},
-              updateData:{},
-              multipleSelection:[],
-              keywords:'',
-              selectType:'bookName',
-              fold:false,
-              filterList:{
+          return{
+            currentTitle:'',
+            dialogTableVisible:false,
+            bookList:{},
+            updateData:{},
+            multipleSelection:[],
+            keywords:'',
+            selectType:'bookName',
+            fold:false,
+            filterList:{
                 orderParemeter:-1,
                 bookCheckStatus:-1,
                 bookStatus:-1
-              },
-              $routeParams:'',
-              keepAlive:false,
-              firstOne:true
-            }
+            },
+            $routeParams:'',
+            keepAlive:false,
+            firstOne:true,
+            editTitle:false,  //修改书籍标题状态
+          }
         },
       methods:{
         getBookList(){
@@ -341,12 +352,12 @@
             }
         },
         handleRowClick(row, event, column){
-            if(column.label!=='操作'){
+            if(column.label!=='操作'&&column.label!=='书名'){
               this.$refs.multipleTable.toggleRowSelection(row);
             }
          
         },
-        
+      
         handleSelectionChange(val){
           this.multipleSelection = val
         },
@@ -371,6 +382,46 @@
         },
         handleCurrentChange(page){
             this.$router.push({params:{page:page}})
+        },
+        dblClick(row,colmon,cell){
+          if( colmon.id === 'el-table_1_column_3' && !this.editTitle && this.authority.updates){
+            this.bookList.list.forEach((item,i)=>{
+                if(item.edit){
+                    this.$set(this.bookList.list[i],'edit',false)
+                }
+            });
+            this.currentTitle = row.bookName;
+            this.$set(row,'edit',true);
+            this.$nextTick(()=>{
+                cell.childNodes[0].childNodes[0].focus()
+            });
+            this.editTitle = true
+          }
+          
+        },
+        updateBookTitle(row){
+          if(this.editTitle){
+            this.bookList.list.forEach((item,i)=>{
+              if(item.edit){
+                this.$set(this.bookList.list[i],'edit',false)
+              }
+            });
+          }
+          if(this.currentTitle!==row.bookName){
+            this.$myLoad();
+            this.$ajax("/admin/updateBookName",{bookId:row.bookId,bookName:row.bookName},res=>{
+                this.editTitle = false;
+                this.$nextTick(()=>{
+                    this.$loading().close()
+                });
+                this.getBookList();
+                if(res.returnCode===200){
+                    this.$message({message:res.msg,type:'success'})
+                }
+            })
+          }else {
+            this.editTitle = false;
+          }
         },
         
 //        书籍上架下架
@@ -483,4 +534,16 @@
   .avatar
     width 200px
     height 200px
+.cell
+  >textarea
+     padding 5px
+     resize none
+     border 1px transparent
+     background #fff
+.edit
+  border none
+  .el-textarea__inner
+      border none!important
+      cursor inherit!important
+      color #333!important
 </style>
